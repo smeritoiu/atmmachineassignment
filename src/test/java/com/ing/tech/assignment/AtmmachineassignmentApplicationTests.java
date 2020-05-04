@@ -21,7 +21,7 @@ class AtmmachineassignmentApplicationTests {
 		account.setPin(1234);
 		account.setBalance(250);
 		
-		service.save(account);
+		//service.save(account);
 	}
 	
 	@Test
