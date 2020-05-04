@@ -1,17 +1,19 @@
 package com.ing.tech.assignment;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ing.tech.assignment.model.Account;
-import com.ing.tech.assignment.service.AccountService;
+import com.ing.tech.assignment.repository.AccountRepository;
 
 @SpringBootTest
 class AtmmachineassignmentApplicationTests {
 	
 	@Autowired
-	private AccountService service;
+	private AccountRepository repository;
 
 	@Test
 	void testCreateAccount() {
@@ -21,13 +23,16 @@ class AtmmachineassignmentApplicationTests {
 		account.setPin(1234);
 		account.setBalance(250);
 		
-		//service.save(account);
+		repository.save(account);
 	}
+	
 	
 	@Test
 	void testFindCustomerByPIN() {
-		Account findAccount = service.findAccountByPIN(1234);
-		System.out.println(findAccount);
+		Optional<Account> findByPin = repository.findByPin(1234);
+		
+		//System.out.println(findAccount);
 	}
+	
 
 }
