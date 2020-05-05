@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ing.tech.assignment.constants.ErrorMessagesConstants;
+import com.ing.tech.assignment.constants.InfoMessagesConstants;
 import com.ing.tech.assignment.exceptions.AccountBalanceException;
 import com.ing.tech.assignment.exceptions.IncorrectPINException;
 import com.ing.tech.assignment.model.Account;
@@ -40,17 +41,19 @@ public class AccountServiceImpl implements AccountService {
 		Account accountFound = findAccount(account.getPin());
 		if (accountFound.getBalance() > account.getWithdrawValue()) {
 			accountFound.setBalance(accountFound.getBalance() - account.getWithdrawValue());
-			return repository.save(accountFound);
+			Account updatedDetails = repository.save(accountFound);
+			LOGGER.info(InfoMessagesConstants.UPDATED_ACCOUNT + updatedDetails.getBalance());
+			return updatedDetails;
 		} else {
-			LOGGER.error(ErrorMessagesConstants.FONDURI_INSUFICIENTE);
-			throw new AccountBalanceException(ErrorMessagesConstants.FONDURI_INSUFICIENTE);
+			LOGGER.error(ErrorMessagesConstants.INSUFFICIENT_FUNDS);
+			throw new AccountBalanceException(ErrorMessagesConstants.INSUFFICIENT_FUNDS);
 		}
 	}
 
 	private Account findAccount(int pin) {
 		return repository.findByPin(pin).orElseThrow((Supplier<? extends IncorrectPINException>) () -> {
-			LOGGER.error(ErrorMessagesConstants.PIN_INCORECT);
-			return new IncorrectPINException(ErrorMessagesConstants.PIN_INCORECT);
+			LOGGER.error(ErrorMessagesConstants.PIN_INCORRECT);
+			return new IncorrectPINException(ErrorMessagesConstants.PIN_INCORRECT);
 		});
 	}
 
