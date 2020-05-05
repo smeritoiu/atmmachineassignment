@@ -32,7 +32,9 @@ public class AccountServiceImpl implements AccountService {
 	public Account depositMoneyToAccount(Account account) {
 		Account accountFound = findAccount(account.getPin());
 		accountFound.setBalance(accountFound.getBalance() + account.getBalance());
-		return repository.save(accountFound);
+		Account updatedAccount = repository.save(accountFound);
+		LOGGER.info(InfoMessagesConstants.UPDATED_ACCOUNT + updatedAccount.getBalance());
+		return updatedAccount;
 
 	}
 
@@ -41,9 +43,9 @@ public class AccountServiceImpl implements AccountService {
 		Account accountFound = findAccount(account.getPin());
 		if (accountFound.getBalance() > account.getWithdrawValue()) {
 			accountFound.setBalance(accountFound.getBalance() - account.getWithdrawValue());
-			Account updatedDetails = repository.save(accountFound);
-			LOGGER.info(InfoMessagesConstants.UPDATED_ACCOUNT + updatedDetails.getBalance());
-			return updatedDetails;
+			Account updatedAccount = repository.save(accountFound);
+			LOGGER.info(InfoMessagesConstants.UPDATED_ACCOUNT + updatedAccount.getBalance());
+			return updatedAccount;
 		} else {
 			LOGGER.error(ErrorMessagesConstants.INSUFFICIENT_FUNDS);
 			throw new AccountBalanceException(ErrorMessagesConstants.INSUFFICIENT_FUNDS);
